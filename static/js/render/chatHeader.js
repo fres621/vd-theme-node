@@ -11,9 +11,12 @@ export default function renderChatHeader({ ctx, w, h }, { getSColor }) {
     ctx.fillStyle = bgColor;
     ctx.shadowColor = separatorColor;
     ctx.shadowBlur = 0;
-    ctx.shadowOffsetY = scale(1)[0];
+    ctx.shadowOffsetY = scale(1);
     ctx.fillRect(0, 0, ...scale(720, 104));
     ctx.restore();
+
+    ctx.fillStyle = buttonsColor;
+    ctx.fillRect(...scale(36, 40, 35, 4));
 
     // Buttons on top bar
     ctx.save();
