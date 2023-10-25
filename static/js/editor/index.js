@@ -6,7 +6,17 @@ let options = {
     getSColor: (k) => getSemanticColor(k, "dark"),
     getRColor: (k) => getRawColor(k),
     getBackground: () => selectedTheme?.background,
-    ref: { url: "./assets/ref/ping.png", alpha: 0.5 }
+    ref: { url: "./assets/ref/name.png", alpha: 0.5 },
+    messages: [{
+        author: {
+            name: "fres",
+            avatarUrl: "https://cdn.discordapp.com/avatars/843448897737064448/520512b700da5b93f1ea5bac0d5849e7.png?size=1024"
+        },
+        timestamp: "Today at 6:21",
+        content: [
+            { content: 'Welcome to vd-theme-node', type: 'text' }
+        ]
+    }]
 }
 
 var canvas = document.createElement('iframe');

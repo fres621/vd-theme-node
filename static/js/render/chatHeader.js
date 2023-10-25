@@ -36,8 +36,7 @@ export default function renderChatHeader({ ctx, w, h }, { getSColor, getRColor }
     ctx.font = `bold ${scale(23)}px gg-sans`;
     ctx.fillStyle = pingNumberColor;
     ctx.textAlign = "center";
-    let chattext = "2";
-    ctx.fillText(chattext, ...scale(78, 73))
+    ctx.fillText("2", ...scale(78, 73))
     ctx.restore();
 
     // Buttons on top bar

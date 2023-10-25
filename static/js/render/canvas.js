@@ -49,7 +49,8 @@ function renderCanvas(options) {
 let options = {
     getSColor: (k)=>getSemanticColor(k, "dark"),
     getRColor: (k) => getRawColor(k, "dark"),
-    getBackground: ()=>undefined
+    getBackground: () => undefined,
+    messages: []
 };
 window.options = options;
 
@@ -77,6 +78,14 @@ async function loadImage(uri) {
             style: "normal",
             weight: 400
         }),
+        new FontFace("gg-sans", "url(assets/fonts/ggsans-Medium.ttf)", {
+            style: "normal",
+            weight: 500
+        }),
+        new FontFace("gg-sans", "url(assets/fonts/ggsans-Semibold.ttf)", {
+            style: "normal",
+            weight: 600
+        }),
         new FontFace("gg-sans", "url(assets/fonts/ggsans-Bold.ttf)", {
             style: "normal",
             weight: 700
@@ -90,6 +99,11 @@ async function loadImage(uri) {
         let bg = o.getBackground();
         let bgimage = await loadImage(bg?.url);
         let refimage = await loadImage(o.ref?.url);
+
+        for (const message of o.messages) {
+            message.author.avatar = await loadImage(message.author.avatarUrl);
+        };
+
         renderCanvas({ ...o, getBackground: () => ({ ...bg, image: bgimage }), ref: { ...o.ref, image: refimage } });
     };
 
