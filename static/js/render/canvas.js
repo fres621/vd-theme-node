@@ -12,6 +12,8 @@ function getRawColor(key) {
     return rawColors[key]
 };
 
+// :3
+
 window.setmessages = async () => { };
 
 function renderCanvas(base_image, options) {
