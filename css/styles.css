@@ -1,3 +1,32 @@
 body {
-    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    margin-top: 10px;
+    font-family: 'Franklin Gothic Normal', 'Arial Narrow', Arial, sans-serif;
 }
+
+.smol {
+    font-size: small;
+}
+
+p {
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+
+#selected-theme-info {
+    margin-bottom: 10px;
+}
+
+#theme_container {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+
+
+/* not yet...
+#canvas_container {
+  display: flex;
+  align-items: center;
+  justify-content: right;
+}
+*/
