@@ -1,24 +1,44 @@
 import scale from './var';
 import SVG from '../svg';
 
-let samplemessages = []
-
-export default function renderChatHeader({ ctx, w, h }, { getSColor }) {
+export default function renderChatHeader({ ctx, w, h }, { getSColor, getRColor }) {
     let bgColor = getSColor("BACKGROUND_MOBILE_SECONDARY");
     let buttonsColor = getSColor("INTERACTIVE_NORMAL");
     let separatorColor = getSColor("BACKGROUND_TERTIARY");
+    let pingColor = getSColor("BUTTON_OUTLINE_DANGER_BORDER");
+    let pingNumberColor = getRColor("WHITE_500");
+
     ctx.save();
     ctx.fillStyle = bgColor;
     ctx.shadowColor = separatorColor;
     ctx.shadowBlur = 0;
-    ctx.shadowOffsetY = scale(1);
-    ctx.fillRect(0, 0, ...scale(720, 104));
+    ctx.shadowOffsetY = scale(1.5);
+    ctx.fillRect(0, 0, ...scale(720, 105));
     ctx.restore();
 
+    // hamburger icon
     ctx.fillStyle = buttonsColor;
     ctx.fillRect(...scale(37, 42, 33, 4));
-    ctx.fillRect(...scale(37, 52, 33, 3));
+    ctx.fillRect(...scale(37, 51.5, 33, 4));
     ctx.fillRect(...scale(37, 61, 33, 4));
+
+    ctx.fillStyle = bgColor;
+    ctx.beginPath();
+    ctx.arc(...scale(78, 65, 21), 0, 2 * Math.PI);
+    ctx.fill();
+
+    ctx.fillStyle = pingColor;
+    ctx.beginPath();
+    ctx.arc(...scale(78, 65, 15), 0, 2 * Math.PI);
+    ctx.fill();
+
+    ctx.save();
+    ctx.font = `bold ${scale(23)}px gg-sans`;
+    ctx.fillStyle = pingNumberColor;
+    ctx.textAlign = "center";
+    let chattext = "2";
+    ctx.fillText(chattext, ...scale(78, 73))
+    ctx.restore();
 
     // Buttons on top bar
     ctx.save();
@@ -31,8 +51,8 @@ export default function renderChatHeader({ ctx, w, h }, { getSColor }) {
         SVG.videocall.fill(ctx);
         ctx.translate(44, 0);
         SVG.members.fill(ctx);
-    } else {
-        ctx.translate(462 * size, 30 * size);
+    } else { // icons for server header instead of dm
+        ctx.translate(...scale(462, 30));
         ctx.scale(1.9 * size, 1.9 * size);
         ctx.fill(new Path2D(SVGs.threads[0]));
         ctx.fill(new Path2D(SVGs.threads[1]));

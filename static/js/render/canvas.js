@@ -72,12 +72,19 @@ async function loadImage(uri) {
 }
 
 (async () => {
-    let f1 = new FontFace("gg-sans", "url(assets/fonts/ggsans-Normal.ttf)", {
-        style: "normal",
-        weight: 400
-    });
-    document.fonts.add(f1);
-    await f1.load();
+    for (const font of [
+        new FontFace("gg-sans", "url(assets/fonts/ggsans-Normal.ttf)", {
+            style: "normal",
+            weight: 400
+        }),
+        new FontFace("gg-sans", "url(assets/fonts/ggsans-Bold.ttf)", {
+            style: "normal",
+            weight: 700
+        }),
+    ]) {
+        document.fonts.add(font);
+        await font.load();
+    };
 
     window.targetFunction = async (o) => {
         let bg = o.getBackground();

@@ -1,12 +1,12 @@
 import scale from "../render/var";
 import { rawColors as defaultRawColors, semanticColors as defaultSemanticColors } from "../defaultColors";
-let selectedTheme = await fetch("https://raw.githubusercontent.com/Wizzy-TV/VendettaThemes/main/PixelCity/pixelcity.json").then(r => r.json());
-
+//let selectedTheme = await fetch("https://raw.githubusercontent.com/Wizzy-TV/VendettaThemes/main/PixelCity/pixelcity.json").then(r => r.json());
+let selectedTheme = undefined;
 let options = {
     getSColor: (k) => getSemanticColor(k, "dark"),
     getRColor: (k) => getRawColor(k),
-    getBackground: () => selectedTheme.background,
-    ref: { url: "./assets/ref/ref.png", alpha: 0.5 }
+    getBackground: () => selectedTheme?.background,
+    ref: { url: "./assets/ref/ping.png", alpha: 0.5 }
 }
 
 var canvas = document.createElement('iframe');
@@ -69,7 +69,7 @@ function getSemanticColor(key, theme) {
 window.getSemanticColor = getSemanticColor;
 
 function getRawColor(key) {
-    return selectedTheme.rawColors?.[key] ||
+    return selectedTheme?.rawColors?.[key] ||
         defaultRawColors[key]
 };
 window.getRawColor = getRawColor;
