@@ -1,4 +1,5 @@
 import scale from './var';
+import renderChatHeader from './chatHeader';
 import renderChatInputBar from './chatInputBar';
 import renderChat from './chat';
 import { rawColors, semanticColors } from '../defaultColors';
@@ -30,12 +31,14 @@ function renderCanvas(options) {
     const canvas = document.getElementById('textCanvas');
     const [w,h] = [canvas.width, canvas.height];
     const ctx = canvas.getContext('2d');
+    let render = (f)=>f({ ctx, w, h }, options);
     ctx.clearRect(0, 0, w, h);
 
-    renderChat({ ctx, w, h }, options);
-    renderChatInputBar({ ctx, w, h }, options);
+    render(renderChat);
+    render(renderChatInputBar);
+    render(renderChatHeader);
 
-    options.ref?.image && tryDrawRef({ ctx, w, h }, options);
+    options.ref?.image && render(tryDrawRef);
 };
 
 let options = {

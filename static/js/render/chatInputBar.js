@@ -17,7 +17,7 @@ export default function renderChatInputBar({ ctx, w, h }, { getSColor }) {
     ctx.shadowOffsetY = -2;
 
     ctx.fillStyle = BGColor;
-    ctx.fillRect(0, 680, w, h);
+    ctx.fillRect(0, 681, w, h);
     ctx.restore();
     // #endregion
 
