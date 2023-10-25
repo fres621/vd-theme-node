@@ -1,2 +1,3 @@
 # vd-theme-node
- Vendetta theme preview
+
+Preview Vendetta themes~ (you will also be able to edit them soon™)
