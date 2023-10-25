@@ -27,6 +27,11 @@ module.exports = {
             patterns: [
                 { from: './static/assets', to: 'assets' }
             ]
+        }),
+        new CopyWebpackPlugin({
+            patterns: [
+                { from: './static/favicon.ico', to: 'favicon.ico' }
+            ]
         })
     ],
     devServer: {
