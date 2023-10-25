@@ -16,17 +16,18 @@
         <link rel="stylesheet" href="./css/styles.css" />
     </head>
     <body>
-        <p>Welcome to Vendetta Theme Preview</p>
-        <div>
+        <h1>Welcome to Vendetta Theme Preview</h1>
+        <p>Paste a theme link in the input below to load a theme</p>
+        <p class="smol">Alternatively open DevTools with Ctrl + Shift + I and run <code>window.loadTheme("URL")</code></p>
+        <div id="theme_container">
             <input type="text" id="theme_input" placeholder="Theme URL"></input>
             <button id="theme_load_btn">Apply</button>
         </div>
         
         <div id="selected-theme-info"></div>
-        <p>Current theme is <a href="https://discord.com/channels/1015931589865246730/1102144682567422022">Pixel City by Wizzy</a> link: https://raw.githubusercontent.com/Wizzy-TV/VendettaThemes/main/PixelCity/pixelcity.json</p>
-        <p>You can preview a different theme by typing <code>loadTheme("URI")</code> in the DevTools console (open with Ctrl+Shift+I)</p>
         <div>
             <input type="range" min="0" max="100" value="100" id="ref_alpha">
+            <label class="smol">Transparency</label>
         </div>
         <div id="canvas_container"></div>
     </body>

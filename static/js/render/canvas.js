@@ -16,11 +16,22 @@ function getRawColor(key) {
 function tryDrawRef({ctx, w, h}, { ref }) {
     ctx.save();
     ctx.globalAlpha = ref.alpha;
-    ctx.drawImage(ref.image, 0, 0, w, h);
+    try {
+        ctx.drawImage(ref.image, 0, 0, w, h);
+    } catch { };
     ctx.restore();
 }
 
-// :33
+const urlParams = new URLSearchParams(window.location.search);
+const importcss = urlParams.get('css');
+if (importcss) {
+    var link = document.createElement("link");
+    link.setAttribute("href", importcss);
+    link.setAttribute("type", "text/css");
+    link.setAttribute("rel", "stylesheet");
+    link.setAttribute("media", "screen,print");
+    document.head.appendChild(link);
+}
 
 const canvas = document.createElement('canvas');
 canvas.width = scale(720)[0];

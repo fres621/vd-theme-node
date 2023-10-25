@@ -6,7 +6,7 @@ let options = {
     getSColor: (k) => getSemanticColor(k, "dark"),
     getRColor: (k) => getRawColor(k),
     getBackground: () => selectedTheme?.background,
-    ref: { url: "./assets/ref/name.png", alpha: 0.5 },
+    ref: { url: "./assets/ref/name.png", alpha: 1 },
     messages: [{
         author: {
             name: "fres",
@@ -19,11 +19,26 @@ let options = {
     }]
 }
 
+function makeSelectedThemeInfo(name, link, authors) {
+    document.getElementById("selected-theme-info").innerHTML = "";
+    [
+        ['span', { }, 'Currently selected: '],
+        ['a', { href: link }, name ?? link],
+        ['span', {}, ' by ' + authors.map(a=>a.name).join(',')]
+    ].map(([tag, attributes, text]) => {
+        let el = document.createElement(tag);
+        el.innerText = text;
+        Object.keys(attributes).map(a => el.setAttribute(a, attributes[a]));
+        document.getElementById("selected-theme-info").appendChild(el);
+    });
+}
+
 var canvas = document.createElement('iframe');
 canvas.onload = function () {
     canvas.contentWindow.canvasOnLoad(() => {
         window.loadTheme = async (uri) => {
             selectedTheme = await fetch(uri).then(r => r.json());
+            makeSelectedThemeInfo(selectedTheme.name, uri, selectedTheme.authors);
             canvas.contentWindow.targetFunction(options);
         };
         const input = document.querySelector("#theme_input");
@@ -42,7 +57,7 @@ canvas.onload = function () {
 
     window.asd = (o) => canvas.contentWindow.targetFunction(o);
 };
-canvas.src = 'canvas.html';
+canvas.src = 'canvas.html?css=css/embed.css';
 canvas.width = scale(720)[0];
 canvas.height = scale(1466)[0];
 canvas.frameBorder = "0";
