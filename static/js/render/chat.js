@@ -9,7 +9,7 @@ export default function renderChat({ ctx, w, h }, { getSColor, getBackground }) 
     ctx.fillRect(0, 0, w, h);
     let bgImage = getBackground()?.image;
     if (bgImage) {
-        let [chatWidth, chatHeight] = scale(720, 1466 - scale(106));
+        let [chatWidth, chatHeight] = scale(720, 1360);
         let aspectRatio = bgImage.width / bgImage.height;
         let width = bgImage.width > bgImage.height ? chatWidth : Math.floor(chatHeight * aspectRatio)
         let height = bgImage.width > bgImage.height ? Math.floor(chatWidth * aspectRatio) : chatHeight

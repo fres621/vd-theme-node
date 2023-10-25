@@ -5,7 +5,7 @@ let options = {
     getSColor: (k) => getSemanticColor(k, "dark"),
     getRColor: (k) => getRawColor(k),
     getBackground: () => selectedTheme.background,
-    ref: { url: "./assets/ref.png", alpha: 0.5 }
+    ref: { url: "./assets/ref/ref.png", alpha: 0.5 }
 }
 
 var canvas = document.createElement('iframe');
