@@ -12,6 +12,8 @@ canvas.onload = function () {
                 getBackground: () => selectedTheme.background
             }));
         };
+        const input = document.querySelector("#theme_input");
+        document.querySelector("#theme_load_btn").addEventListener("click", () => window.loadTheme(input.value))
         canvas.contentWindow.targetFunction(({
             getSColor: (k) => getSemanticColor(k, "dark"),
             getRColor: (k) => getRawColor(k),
