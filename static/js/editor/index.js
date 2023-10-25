@@ -32,7 +32,7 @@ canvas.width = "360";
 canvas.height = "733";
 canvas.frameBorder = "0";
 canvas.scrolling = "no";
-document.body.appendChild(canvas);
+document.querySelector("#canvas_container").appendChild(canvas);
 
 window.defaultSemanticColors = defaultSemanticColors;
 window.defaultRawColors = defaultRawColors;
