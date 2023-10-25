@@ -53,11 +53,13 @@ let loadedImages = {};
 
     let base_image = new Image();
     base_image.src = 'assets/ss.png';
-    base_image.onload = function () {
+    function refImageLoaded() {
         renderCanvas(base_image, options);
         window._isCanvasLoaded = true;
         window._onLoadCallbacks.forEach(cb => cb());
-    }
+    };
+    base_image.onload = refImageLoaded;
+    base_image.onerror = refImageLoaded;
     window.targetFunction = (o) => {
         let bg = o.getBackground();
         let bguri = bg?.url;
