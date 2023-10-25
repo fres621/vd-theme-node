@@ -22,13 +22,18 @@ function tryDrawRef({ctx, w, h}, { ref }) {
 
 // :33
 
+const canvas = document.createElement('canvas');
+canvas.width = scale(720)[0];
+canvas.height = scale(1466)[0];
+document.body.appendChild(canvas);
+
+
 window.setmessages = async () => { };
 
 function renderCanvas(options) {
     console.log("options", options);
     
     // Get the canvas element
-    const canvas = document.getElementById('textCanvas');
     const [w,h] = [canvas.width, canvas.height];
     const ctx = canvas.getContext('2d');
     let render = (f)=>f({ ctx, w, h }, options);

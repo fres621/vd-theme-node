@@ -1,3 +1,4 @@
+import scale from "../render/var";
 import { rawColors as defaultRawColors, semanticColors as defaultSemanticColors } from "../defaultColors";
 let selectedTheme = await fetch("https://raw.githubusercontent.com/Wizzy-TV/VendettaThemes/main/PixelCity/pixelcity.json").then(r => r.json());
 
@@ -28,8 +29,8 @@ canvas.onload = function () {
     window.asd = (o) => canvas.contentWindow.targetFunction(o);
 };
 canvas.src = 'canvas.html';
-canvas.width = "360";
-canvas.height = "733";
+canvas.width = scale(720)[0];
+canvas.height = scale(1466)[0];
 canvas.frameBorder = "0";
 canvas.scrolling = "no";
 document.querySelector("#canvas_container").appendChild(canvas);
