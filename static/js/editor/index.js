@@ -19,6 +19,8 @@ let options = {
     }]
 }
 
+if (window.location.hostname != "localhost") document.getElementById("ref_alpha_container").style = "display: none;";
+
 function makeSelectedThemeInfo(name, link, authors) {
     document.getElementById("selected-theme-info").innerHTML = "";
     [
