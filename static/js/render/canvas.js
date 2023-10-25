@@ -50,7 +50,7 @@ let loadedImages = {};
     });
     document.fonts.add(f1);
     await f1.load();
-
+    let base_image = undefined;
     renderCanvas(base_image, options);
     window._isCanvasLoaded = true;
     window._onLoadCallbacks.forEach(cb => cb());
