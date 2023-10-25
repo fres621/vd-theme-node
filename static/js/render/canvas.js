@@ -12,11 +12,18 @@ function getRawColor(key) {
     return rawColors[key]
 };
 
+function tryDrawRef({ctx, w, h}, { ref }) {
+    ctx.save();
+    ctx.globalAlpha = ref.alpha;
+    ctx.drawImage(ref.image, 0, 0, w, h);
+    ctx.restore();
+}
+
 // :33
 
 window.setmessages = async () => { };
 
-function renderCanvas(base_image, options) {
+function renderCanvas(options) {
     console.log("options", options);
     
     // Get the canvas element
@@ -28,10 +35,7 @@ function renderCanvas(base_image, options) {
     renderChat({ ctx, w, h }, options);
     renderChatInputBar({ ctx, w, h }, options);
 
-    ctx.save();
-    ctx.globalAlpha = 0.7;
-    //ctx.drawImage(base_image, 0, 0, w, h);
-    ctx.restore();
+    options.ref?.image && tryDrawRef({ ctx, w, h }, options);
 };
 
 let options = {
@@ -43,6 +47,22 @@ window.options = options;
 
 let loadedImages = {};
 
+async function loadImage(uri) {
+    return new Promise(res => { 
+        if (!uri) return res(null);
+        if (loadedImages[uri]) return res(loadedImages[uri]);
+        let img = new Image();
+        img.src = uri;
+        loadedImages[uri] = img;
+        img.onload = function () {
+            return res(img);
+        }
+        img.onerror = function () {
+            return res(null);
+        }
+    });
+}
+
 (async () => {
     let f1 = new FontFace("gg-sans", "url(assets/fonts/ggsans-Normal.ttf)", {
         style: "normal",
@@ -50,38 +70,15 @@ let loadedImages = {};
     });
     document.fonts.add(f1);
     await f1.load();
-    let base_image = undefined;
-    
 
-    /*
-    let base_image = new Image();
-    base_image.src = 'assets/ss.png';
-    base_image.onload = function() {
-        renderCanvas(base_image, options);
-        window._isCanvasLoaded = true;
-        window._onLoadCallbacks.forEach(cb => cb());
-    };
-    */
-    window.targetFunction = (o) => {
+    window.targetFunction = async (o) => {
         let bg = o.getBackground();
-        let bguri = bg?.url;
-        if (bguri) {
-            if (!loadedImages[bguri]) {
-                let bg_image = new Image();
-                bg_image.src = bguri;
-                loadedImages[bguri] = bg_image;
-                bg_image.onload = function () {
-                    renderCanvas(base_image, { ...o, getBackground: () => ({ ...bg, image: bg_image }) });
-                }
-            } else {
-                renderCanvas(base_image, { ...o, getBackground: () => ({ ...bg, image: loadedImages[bguri] }) });
-            }
-        } else {
-            renderCanvas(base_image, o);
-        };
+        let bgimage = await loadImage(bg?.url);
+        let refimage = await loadImage(o.ref?.url);
+        renderCanvas({ ...o, getBackground: () => ({ ...bg, image: bgimage }), ref: { ...o.ref, image: refimage } });
     };
 
-    renderCanvas(base_image, options);
+    renderCanvas(options);
     window._isCanvasLoaded = true;
     window._onLoadCallbacks.forEach(cb => cb());
 })();

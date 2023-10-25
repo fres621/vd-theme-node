@@ -1,24 +1,28 @@
 import { rawColors as defaultRawColors, semanticColors as defaultSemanticColors } from "../defaultColors";
 let selectedTheme = await fetch("https://raw.githubusercontent.com/Wizzy-TV/VendettaThemes/main/PixelCity/pixelcity.json").then(r => r.json());
 
+let options = {
+    getSColor: (k) => getSemanticColor(k, "dark"),
+    getRColor: (k) => getRawColor(k),
+    getBackground: () => selectedTheme.background,
+    ref: { url: "./assets/ref.png", alpha: 0.5 }
+}
+
 var canvas = document.createElement('iframe');
 canvas.onload = function () {
     canvas.contentWindow.canvasOnLoad(() => {
         window.loadTheme = async (uri) => {
             selectedTheme = await fetch(uri).then(r => r.json());
-            canvas.contentWindow.targetFunction(({
-                getSColor: (k) => getSemanticColor(k, "dark"),
-                getRColor: (k) => getRawColor(k),
-                getBackground: () => selectedTheme.background
-            }));
+            canvas.contentWindow.targetFunction(options);
         };
         const input = document.querySelector("#theme_input");
         document.querySelector("#theme_load_btn").addEventListener("click", () => window.loadTheme(input.value))
-        canvas.contentWindow.targetFunction(({
-            getSColor: (k) => getSemanticColor(k, "dark"),
-            getRColor: (k) => getRawColor(k),
-            getBackground: () => selectedTheme.background
-        }));
+        canvas.contentWindow.targetFunction(options);
+        const slider = document.querySelector("#ref_alpha")
+        slider.addEventListener("input", function () { 
+            options.ref.alpha = slider.value / 100;
+            canvas.contentWindow.targetFunction(options);
+         });
     });
 
     window.asd = (o) => canvas.contentWindow.targetFunction(o);
