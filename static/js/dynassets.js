@@ -21,3 +21,6 @@ export async function addAsset(uri) {
 export async function getAssets() {
     return assets;
 }
+
+
+// Unused as of now, will be used in the future to replace loadImage in render/canvas.js

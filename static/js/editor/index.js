@@ -33,7 +33,11 @@ canvas.onload = function () {
         slider.addEventListener("input", function () { 
             options.ref.alpha = slider.value / 100;
             canvas.contentWindow.targetFunction(options);
-         });
+        });
+        slider.addEventListener("change", function () { 
+            options.ref.alpha = slider.value / 100;
+            canvas.contentWindow.targetFunction(options);
+        });
     });
 
     window.asd = (o) => canvas.contentWindow.targetFunction(o);
