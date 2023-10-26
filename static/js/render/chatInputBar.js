@@ -8,8 +8,8 @@ export default function renderChatInputBar({ ctx, w, h }, { getSColor }) {
     let EmojiPickerBtnColor = getSColor("INTERACTIVE_NORMAL");
     let ButtonColor = getSColor("REDESIGN_BUTTON_SECONDARY_ALT_TEXT");
     let placeholderColor = getSColor("TEXT_MUTED");
-    //[separatorColor, ButtonBGColor, inputBGColor, EmojiPickerBtnColor, ButtonBGColor, placeholderColor] = Array(6).fill("#ff0000");
     let textColor = "#ffffff";
+    
     // #region Background
     ctx.save();
     ctx.shadowColor = separatorColor;
@@ -25,7 +25,7 @@ export default function renderChatInputBar({ ctx, w, h }, { getSColor }) {
     // #region Background for input
     ctx.fillStyle = inputBGColor;
     ctx.beginPath()
-    ctx.roundRect(...scale(105, 1372.5, 510 , 75.6), 100);
+    ctx.roundRect(...scale(105, 1372.5, 510 , 75.6, 40));
     ctx.fill();
     // #endregion
 

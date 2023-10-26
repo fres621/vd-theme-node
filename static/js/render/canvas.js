@@ -61,7 +61,8 @@ let options = {
     getSColor: (k)=>getSemanticColor(k, "dark"),
     getRColor: (k) => getRawColor(k, "dark"),
     getBackground: () => undefined,
-    messages: []
+    messages: [],
+    channel: {type: 'GC', name: 'hehe'}
 };
 window.options = options;
 
@@ -101,6 +102,10 @@ async function loadImage(uri) {
             style: "normal",
             weight: 700
         }),
+        new FontFace("SourceCodePro", "url(assets/fonts/SourceCodePro-Semibold.ttf)", {
+            style: "normal",
+            weight: 500
+        })
     ]) {
         document.fonts.add(font);
         await font.load();

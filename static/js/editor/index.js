@@ -6,7 +6,7 @@ let options = {
     getSColor: (k) => getSemanticColor(k, "dark"),
     getRColor: (k) => getRawColor(k),
     getBackground: () => selectedTheme?.background,
-    ref: { url: "./assets/ref/name.png", alpha: 1 },
+    ref: { url: "./assets/ref/content.png", alpha: 1 },
     messages: [{
         author: {
             name: "fres",
@@ -14,9 +14,12 @@ let options = {
         },
         timestamp: "Today at 6:21",
         content: [
-            { content: 'Welcome to vd-theme-node', type: 'text' }
+            { content: 'Welcome to ', type: 'text' },
+            { content: 'vd-theme-node', type: 'inlineCode' },
+            { content: ' :3', type: 'text' }
         ]
-    }]
+    }],
+    channel: {type: 'GC', name: 'hehe'}
 }
 
 if (window.location.hostname != "localhost") document.getElementById("ref_alpha_container").style = "display: none;";

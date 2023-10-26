@@ -16,10 +16,10 @@ let samplemessages = [{
 }]
 */
 
-
 export default function renderChat({ ctx, w, h }, { getSColor, getBackground, messages }) {
     let BGColor = getSColor("BG_BASE_PRIMARY");
     let textColor = getSColor("TEXT_NORMAL");
+    let spoilerColor = getSColor("BACKGROUND_SECONDARY");
     let authorColor = getSColor("INTERACTIVE_ACTIVE");
     let timestampColor = getSColor("TEXT_MUTED");
 
@@ -54,13 +54,23 @@ export default function renderChat({ ctx, w, h }, { getSColor, getBackground, me
         ctx.font = `500 ${scale(22)}px gg-sans`;
         ctx.fillStyle = timestampColor;
         ctx.fillText(message.timestamp, textw + scale(120 + 16)[0], scale(1249))
+
+        let [textx, texty] = scale(120, 1289);
         
         for (const node of message.content) {
-            console.log(node);
             if (node.type === "text") {
                 ctx.font = `500 ${scale(30)}px gg-sans`;
                 ctx.fillStyle = textColor;
-                ctx.fillText(node.content, ...scale(120, 1289))
+                ctx.fillText(node.content, textx, texty);
+                textx += ctx.measureText(node.content).width;
+            } else if (node.type === "inlineCode") {
+                ctx.font = `500 ${scale(25)}px SourceCodePro`;
+                let twidth = ctx.measureText(node.content).width;
+                ctx.fillStyle = spoilerColor;
+                ctx.fillRect(textx, texty-scale(30)[0], twidth, scale(38)[0]);
+                ctx.fillStyle = textColor;
+                ctx.fillText(node.content, textx, texty);
+                textx += ctx.measureText(node.content).width;
             }
         }
         

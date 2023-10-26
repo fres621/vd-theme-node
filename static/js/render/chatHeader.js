@@ -4,9 +4,11 @@ import SVG from '../svg';
 export default function renderChatHeader({ ctx, w, h }, { getSColor, getRColor }) {
     let bgColor = getSColor("BACKGROUND_MOBILE_SECONDARY");
     let buttonsColor = getSColor("INTERACTIVE_NORMAL");
+    let channelIconColor = getSColor("CHANNEL_ICON");
     let separatorColor = getSColor("BACKGROUND_TERTIARY");
     let pingColor = getSColor("BUTTON_OUTLINE_DANGER_BORDER");
     let pingNumberColor = getRColor("WHITE_500");
+    let channelTitleColor = getSColor("HEADER_PRIMARY");
 
     ctx.save();
     ctx.fillStyle = bgColor;
@@ -21,6 +23,8 @@ export default function renderChatHeader({ ctx, w, h }, { getSColor, getRColor }
     ctx.fillRect(...scale(37, 42, 33, 4));
     ctx.fillRect(...scale(37, 51.5, 33, 4));
     ctx.fillRect(...scale(37, 61, 33, 4));
+
+    // #region Ping number
 
     ctx.fillStyle = bgColor;
     ctx.beginPath();
@@ -37,6 +41,22 @@ export default function renderChatHeader({ ctx, w, h }, { getSColor, getRColor }
     ctx.fillStyle = pingNumberColor;
     ctx.textAlign = "center";
     ctx.fillText("2", ...scale(78, 73))
+    ctx.restore();
+    // #endregion
+
+    // Channel icon
+    ctx.save();
+    ctx.fillStyle = channelIconColor;
+    ctx.translate(...scale(120, 37));
+    ctx.scale(...scale(1.4, 1.4));
+    SVG.members.fill(ctx);
+    ctx.restore();
+
+    // Channel title
+    ctx.save();
+    ctx.font = `600 ${scale(31)}px gg-sans`;
+    ctx.fillStyle = channelTitleColor;
+    ctx.fillText("fres's Group", ...scale(169, 67))
     ctx.restore();
 
     // Buttons on top bar
