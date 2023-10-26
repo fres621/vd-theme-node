@@ -69,6 +69,14 @@ canvas.frameBorder = "0";
 canvas.scrolling = "no";
 document.querySelector("#canvas_container").appendChild(canvas);
 
+canvas.addEventListener('load', function () {
+    canvas.style = `width: ${720/1466*window.innerHeight*0.9}; height: ${window.innerHeight*0.9}`;
+});
+
+window.addEventListener('resize', function() {
+    canvas.style = `width: ${720/1466*window.innerHeight*0.9}; height: ${window.innerHeight*0.9}`;
+});
+
 window.defaultSemanticColors = defaultSemanticColors;
 window.defaultRawColors = defaultRawColors;
 window.ctheme = selectedTheme;

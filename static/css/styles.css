@@ -1,5 +1,5 @@
 body {
-    margin-top: 10px;
+    margin: 0;
     font-family: 'Franklin Gothic Normal', 'Arial Narrow', Arial, sans-serif;
 }
 
@@ -21,12 +21,29 @@ p {
     margin-bottom: 10px;
 }
 
+#theme_input {
+    width: 30em;
+}
 
+main {
+    display: flex;
+    justify-content: space-between;
+    height: 100vh;
+    padding-left: 10px;
+    padding-right: 5vh;
+}
 
-/* not yet...
+#main_left {
+    margin-top: 5vh;
+}
+
+#main_left h1 {
+    margin-top: 0;
+}
+
 #canvas_container {
   display: flex;
   align-items: center;
   justify-content: right;
+  align-self: center
 }
-*/
