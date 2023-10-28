@@ -16,6 +16,19 @@ let samplemessages = [{
 }]
 */
 
+function trimTextToWidth(ctx, text, addEllipsis, maxWidth) {
+    const measure = ctx.measureText;
+
+    if (measure(text).width <= maxWidth) return text;
+    if (!text.length) return "";
+
+    for (let i = text.length - 1; i > 0; i--) {
+        let trimmed = text.substring(0, i) + (addEllipsis ? "..." : "");
+        if (measure(trimmed).width <= maxWidth) return trimmed;
+    };
+    return "";
+};
+
 export default function renderChat({ ctx, w, h }, { getSColor, getBackground, messages }) {
     let BGColor = getSColor("BG_BASE_PRIMARY");
     let textColor = getSColor("TEXT_NORMAL");
@@ -59,6 +72,9 @@ export default function renderChat({ ctx, w, h }, { getSColor, getBackground, me
         
         for (const node of message.content) {
             if (node.type === "text") {
+
+
+
                 ctx.font = `500 ${scale(30)}px gg-sans`;
                 ctx.fillStyle = textColor;
                 ctx.fillText(node.content, textx, texty);

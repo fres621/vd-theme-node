@@ -77,6 +77,16 @@ window.addEventListener('resize', function() {
     canvas.style = `width: ${720/1466*window.innerHeight*0.9}; height: ${window.innerHeight*0.9}`;
 });
 
+document.getElementById("nav").addEventListener("click", (e) => {
+    let tabName = e.target.dataset.name;
+    if (!tabName) return;
+    
+    document.querySelector(`.tab_content.selected`).classList.remove("selected");
+    document.querySelector(`.tab_content[data-name=${tabName}]`).classList.add("selected");
+    document.querySelector(`#nav .tab.selected`).classList.remove("selected");
+    e.target.classList.add("selected");
+});
+
 window.defaultSemanticColors = defaultSemanticColors;
 window.defaultRawColors = defaultRawColors;
 window.ctheme = selectedTheme;
