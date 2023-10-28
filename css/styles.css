@@ -29,16 +29,42 @@ main {
     display: flex;
     justify-content: space-between;
     height: 100vh;
-    padding-left: 10px;
     padding-right: 5vh;
 }
 
 #main_left {
-    margin-top: 5vh;
+    display: flex;
 }
 
 #main_left h1 {
     margin-top: 0;
+}
+
+#nav {
+    display: flex;
+    flex-direction: column;
+    background-color: #80808022;
+    width: 100px;
+    margin-right: 50px;
+}
+
+.tab_content {
+    margin-top: 5vh;
+    display: none;
+}
+
+.tab_content.selected {
+    display: block;
+}
+
+.tab {
+    background-color: blue;
+    transition: background-color 500ms;
+    transition-timing-function: cubic-bezier(0.68,-0.55,0.27,1.55);
+}
+
+.tab.selected {
+    background-color: yellow;
 }
 
 #canvas_container {
