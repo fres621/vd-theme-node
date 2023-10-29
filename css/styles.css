@@ -69,12 +69,14 @@ main {
     width: 100px;
     border: none;
     border-right: 0px solid transparent;
-    transition: background-color 500ms, border-right 500ms;
+    color: #bebd78;
+    transition: background-color 500ms, border-right 500ms, color 500ms;
 }
 
 .tab.selected {
-    background-color: #ACBB5D;
-    border-right: 10px solid lightyellow;
+    background-color: #86933e;
+    border-right: 10px solid #b1b152;
+    color: #ffffff;
 }
 
 #canvas_container {
