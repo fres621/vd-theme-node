@@ -46,6 +46,11 @@ main {
     background-color: #80808022;
     width: 100px;
     margin-right: 50px;
+    border-radius: 0px 50px 50px 0px;
+}
+
+#nav :first-child {
+    border-radius: 0px 50px 0px 0px;
 }
 
 .tab_content {
@@ -58,13 +63,18 @@ main {
 }
 
 .tab {
-    background-color: blue;
-    transition: background-color 500ms;
+    background-color: #80808022;
     transition-timing-function: cubic-bezier(0.68,-0.55,0.27,1.55);
+    height: 100px;
+    width: 100px;
+    border: none;
+    border-right: 0px solid transparent;
+    transition: background-color 500ms, border-right 500ms;
 }
 
 .tab.selected {
-    background-color: yellow;
+    background-color: #ACBB5D;
+    border-right: 10px solid lightyellow;
 }
 
 #canvas_container {
