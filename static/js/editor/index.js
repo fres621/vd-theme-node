@@ -38,6 +38,12 @@ function makeSelectedThemeInfo(name, link, authors) {
     });
 }
 
+document.getElementById("colorinput").addEventListener("input", () => {
+    if (!selectedTheme?.semanticColors) selectedTheme = { semanticColors: {} };
+    selectedTheme.semanticColors.BG_BASE_PRIMARY = [document.getElementById("colorinput").value];
+    canvas.contentWindow.targetFunction(options);
+});
+
 var canvas = document.createElement('iframe');
 canvas.onload = function () {
     canvas.contentWindow.canvasOnLoad(() => {
