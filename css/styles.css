@@ -74,8 +74,8 @@ main {
 }
 
 .tab.selected {
-    background-color: #86933e;
-    border-right: 10px solid #b1b152;
+    background-color: #86933edd;
+    border-right: 10px solid #b1b15299;
     color: #ffffff;
 }
 
@@ -84,4 +84,10 @@ main {
   align-items: center;
   justify-content: right;
   align-self: center
+}
+
+@media (prefers-color-scheme: light) {
+    .tab {
+        color: #000000;
+    }
 }
