@@ -84,6 +84,29 @@ main {
     color: #ffffff;
 }
 
+#editor_container {
+    display: flex;
+    flex-direction: column;
+    height: 90vh;
+}
+
+#titles {
+    flex: 1;
+}
+
+#inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    overflow: overlay;
+    flex: 4;
+}
+
+.color_input {
+    display: flex;
+    gap: 5px;
+}
+
 #canvas_container {
   display: flex;
   align-items: center;
