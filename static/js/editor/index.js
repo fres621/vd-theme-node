@@ -38,12 +38,6 @@ function makeSelectedThemeInfo(name, link, authors) {
     });
 }
 
-document.getElementById("colorinput").addEventListener("input", () => {
-    if (!selectedTheme?.semanticColors) selectedTheme = { semanticColors: {} };
-    selectedTheme.semanticColors.BG_BASE_PRIMARY = [document.getElementById("colorinput").value];
-    canvas.contentWindow.targetFunction(options);
-});
-
 var canvas = document.createElement('iframe');
 canvas.onload = function () {
     canvas.contentWindow.canvasOnLoad(() => {
@@ -51,6 +45,7 @@ canvas.onload = function () {
             selectedTheme = await fetch(uri).then(r => r.json());
             makeSelectedThemeInfo(selectedTheme.name, uri, selectedTheme.authors);
             canvas.contentWindow.targetFunction(options);
+            loadColorInputs();
         };
         const input = document.querySelector("#theme_input");
         document.querySelector("#theme_load_btn").addEventListener("click", () => window.loadTheme(input.value))
@@ -82,6 +77,34 @@ canvas.addEventListener('load', function () {
 window.addEventListener('resize', function() {
     canvas.style = `width: ${720/1466*window.innerHeight*0.9}; height: ${window.innerHeight*0.9}`;
 });
+
+function loadColorInputs() {
+    let inputs = document.getElementById("inputs");
+    inputs.innerHTML = "";
+    if (!selectedTheme) selectedTheme = { semanticColors: {} };
+    if (!selectedTheme.semanticColors) selectedTheme.semanticColors = {};
+    Object.keys(selectedTheme.semanticColors).forEach(key => {
+        const div = document.createElement("div");
+        div.className = "color_input";
+
+        const input = document.createElement("input");
+        input.type = "color";
+        input.value = selectedTheme.semanticColors[key]?.[0] || defaultSemanticColors[key]?.[0];
+        input.dataset.key = key;
+        input.addEventListener("input", () => {
+            selectedTheme.semanticColors[key] = [input.value];
+            canvas.contentWindow.targetFunction(options);
+        });
+        div.appendChild(input);
+
+        const p = document.createElement("p");
+        p.textContent = key;
+        div.appendChild(p);
+
+        inputs.appendChild(div);
+    });
+};
+loadColorInputs();
 
 document.getElementById("nav").addEventListener("click", (e) => {
     let tabName = e.target.dataset.name;
