@@ -13,7 +13,7 @@ export default function loadColorInputs(selectedTheme, update) {
         input.dataset.key = key;
         input.addEventListener("input", () => {
             selectedTheme.custom.semanticColors[key] = [input.value];
-            canvas.contentWindow.targetFunction(options);
+            update();
         });
         div.appendChild(input);
 
