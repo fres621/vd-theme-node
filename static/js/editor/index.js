@@ -29,7 +29,7 @@ function makeSelectedThemeInfo(name, link, authors) {
     [
         ['span', { }, 'Currently selected: '],
         ['a', { href: link }, name ?? link],
-        ['span', {}, ' by ' + authors.map(a=>a.name).join(',')]
+        ['span', {}, ' by ' + authors.map(a=>a.name).join(', ')]
     ].map(([tag, attributes, text]) => {
         let el = document.createElement(tag);
         el.innerText = text;
