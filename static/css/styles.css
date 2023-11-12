@@ -102,6 +102,12 @@ main {
     flex: 4;
 }
 
+#inputs>div {
+    flex: 1;
+    overflow: overlay;
+    padding-right: 10px;
+}
+
 .color_input {
     display: flex;
     gap: 5px;

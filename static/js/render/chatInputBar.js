@@ -1,6 +1,6 @@
-import scale from './var';
+import scale from "./var";
 
-export default function renderChatInputBar({ ctx, w, h }, { getSColor }) {
+export default function renderChatInputBar({ ctx, w, h }, { getSColor, channel }) {
     let BGColor = getSColor("BG_BASE_PRIMARY");
     let separatorColor = getSColor("INPUT_BACKGROUND");
     let ButtonBGColor = getSColor("REDESIGN_BUTTON_SECONDARY_ALT_BACKGROUND");
@@ -8,8 +8,7 @@ export default function renderChatInputBar({ ctx, w, h }, { getSColor }) {
     let EmojiPickerBtnColor = getSColor("INTERACTIVE_NORMAL");
     let ButtonColor = getSColor("REDESIGN_BUTTON_SECONDARY_ALT_TEXT");
     let placeholderColor = getSColor("TEXT_MUTED");
-    let textColor = "#ffffff";
-    
+
     // #region Background
     ctx.save();
     ctx.shadowColor = separatorColor;
@@ -24,15 +23,15 @@ export default function renderChatInputBar({ ctx, w, h }, { getSColor }) {
     ctx.save();
     // #region Background for input
     ctx.fillStyle = inputBGColor;
-    ctx.beginPath()
-    ctx.roundRect(...scale(105, 1372.5, 510 , 75.6, 40));
+    ctx.beginPath();
+    ctx.roundRect(...scale(105, 1372.5, 510, 75.6, 40));
     ctx.fill();
     // #endregion
 
     // #region Background for buttons
     ctx.fillStyle = ButtonBGColor;
     ctx.beginPath();
-    ctx.arc(...scale(53.5, 1410.5 , 37.4), 0, 2 * Math.PI);
+    ctx.arc(...scale(53.5, 1410.5, 37.4), 0, 2 * Math.PI);
     ctx.fill();
     ctx.beginPath();
     ctx.arc(...scale(668.5, 1410.5, 37.4), 0, 2 * Math.PI);
@@ -41,7 +40,9 @@ export default function renderChatInputBar({ ctx, w, h }, { getSColor }) {
 
     ctx.font = `${scale(30)}px gg-sans`;
     ctx.fillStyle = placeholderColor;
-    let chattext = "Message @uwu";
+    let chattext = "Message ";
+    chattext += channel.type === "GC" ? "" : channel.type === "DM" ? "@" : "#";
+    chattext += channel.name;
     ctx.fillText(chattext, ...scale(131, 1422));
 
     ctx.fillStyle = ButtonColor;
@@ -76,4 +77,4 @@ export default function renderChatInputBar({ ctx, w, h }, { getSColor }) {
     ctx.arc(...scale(576.5, 1412.5, 11), 0, 1 * Math.PI);
     ctx.fill();
     ctx.restore();
-};
+}

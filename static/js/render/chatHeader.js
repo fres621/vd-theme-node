@@ -1,7 +1,7 @@
-import scale from './var';
-import SVG from '../svg';
+import scale from "./var";
+import SVG from "../svg";
 
-export default function renderChatHeader({ ctx, w, h }, { getSColor, getRColor }) {
+export default function renderChatHeader({ ctx, w, h }, { getSColor, getRColor, pings, channel }) {
     let bgColor = getSColor("BACKGROUND_MOBILE_SECONDARY");
     let buttonsColor = getSColor("INTERACTIVE_NORMAL");
     let channelIconColor = getSColor("CHANNEL_ICON");
@@ -25,23 +25,24 @@ export default function renderChatHeader({ ctx, w, h }, { getSColor, getRColor }
     ctx.fillRect(...scale(37, 61, 33, 4));
 
     // #region Ping number
+    if (pings) {
+        ctx.fillStyle = bgColor;
+        ctx.beginPath();
+        ctx.arc(...scale(78, 65, 21), 0, 2 * Math.PI);
+        ctx.fill();
 
-    ctx.fillStyle = bgColor;
-    ctx.beginPath();
-    ctx.arc(...scale(78, 65, 21), 0, 2 * Math.PI);
-    ctx.fill();
+        ctx.fillStyle = pingColor;
+        ctx.beginPath();
+        ctx.arc(...scale(78, 65, 15), 0, 2 * Math.PI);
+        ctx.fill();
 
-    ctx.fillStyle = pingColor;
-    ctx.beginPath();
-    ctx.arc(...scale(78, 65, 15), 0, 2 * Math.PI);
-    ctx.fill();
-
-    ctx.save();
-    ctx.font = `bold ${scale(23)}px gg-sans`;
-    ctx.fillStyle = pingNumberColor;
-    ctx.textAlign = "center";
-    ctx.fillText("2", ...scale(78, 73))
-    ctx.restore();
+        ctx.save();
+        ctx.font = `bold ${scale(23)}px gg-sans`;
+        ctx.fillStyle = pingNumberColor;
+        ctx.textAlign = "center";
+        ctx.fillText(pings, ...scale(78, 73));
+        ctx.restore();
+    }
     // #endregion
 
     // Channel icon
@@ -56,7 +57,7 @@ export default function renderChatHeader({ ctx, w, h }, { getSColor, getRColor }
     ctx.save();
     ctx.font = `600 ${scale(31)}px gg-sans`;
     ctx.fillStyle = channelTitleColor;
-    ctx.fillText("fres's Group", ...scale(169, 67))
+    ctx.fillText(channel.name, ...scale(169, 67));
     ctx.restore();
 
     // Buttons on top bar
@@ -70,7 +71,8 @@ export default function renderChatHeader({ ctx, w, h }, { getSColor, getRColor }
         SVG.videocall.fill(ctx);
         ctx.translate(44, 0);
         SVG.members.fill(ctx);
-    } else { // icons for server header instead of dm
+    } else {
+        // icons for server header instead of dm
         ctx.translate(...scale(462, 30));
         ctx.scale(1.9 * size, 1.9 * size);
         ctx.fill(new Path2D(SVGs.threads[0]));
@@ -81,6 +83,6 @@ export default function renderChatHeader({ ctx, w, h }, { getSColor, getRColor }
         ctx.fill(new Path2D(SVGs.members[0]));
         ctx.fill(new Path2D(SVGs.members[1]));
         ctx.fill(new Path2D(SVGs.members[2]));
-    };
+    }
     ctx.restore();
-};
+}
