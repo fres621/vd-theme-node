@@ -1,4 +1,4 @@
-const factor = 1;
+export const factor = 1;
 export default function scale(...a) {
     return a.map((e) => e * factor);
 }

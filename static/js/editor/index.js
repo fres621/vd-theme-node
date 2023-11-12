@@ -124,13 +124,22 @@ canvas.scrolling = "no";
 document.querySelector("#canvas_container").appendChild(canvas);
 
 const update = () => canvas.contentWindow.targetFunction(options);
-let big = 1;
+
+const getCanvasWidth = () => (720 / 1466) * window.innerHeight * 0.9 * big;
+const getCanvasHeight = () => window.innerHeight * 0.9 * big;
+const big = 1;
 canvas.addEventListener("load", function () {
-    canvas.style = `width: ${(720 / 1466) * window.innerHeight * 0.9 * big}; height: ${window.innerHeight * 0.9 * big}`;
+    canvas.style = `width: ${getCanvasWidth()}; height: ${getCanvasHeight()}`;
 });
 
 window.addEventListener("resize", function () {
-    canvas.style = `width: ${(720 / 1466) * window.innerHeight * 0.9 * big}; height: ${window.innerHeight * 0.9 * big}`;
+    canvas.style = `width: ${getCanvasWidth()}; height: ${getCanvasHeight()}`;
+});
+
+canvas.contentWindow.addEventListener("mousedown", ({ offsetX, offsetY }) => {
+    let interval = [offsetX / Math.floor(getCanvasWidth()), offsetY / Math.floor(getCanvasHeight())];
+    console.log(interval);
+    console.log(canvas.contentWindow.getHitsFromInterval(...interval));
 });
 
 loadColorInputs(selectedTheme, update);

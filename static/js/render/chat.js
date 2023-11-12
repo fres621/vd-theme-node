@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
-import scale, { s, scaledCtx } from "./var";
+import { factor, scaledCtx } from "./var";
+import { add } from "../hitregions";
 
 /*
 let samplemessages = [{
@@ -62,9 +63,12 @@ export default function renderChat({ ctx, w, h }, { getSColor, getBackground, me
 
     const scaled = scaledCtx(ctx);
 
+    const heightTransform = () => ctx.getTransform().transformPoint().y;
+
     // #region Background
     ctx.fillStyle = BGColor;
     ctx.fillRect(0, 0, w, h);
+    add({ color: "BG_BASE_PRIMARY", region: { x: 0, y: 0, width: w, height: h } });
     let bg = getBackground();
     let bgImage = bg?.image;
     if (bgImage) {
@@ -143,13 +147,18 @@ export default function renderChat({ ctx, w, h }, { getSColor, getBackground, me
             scaled.drawImage(message.author.avatar, 22, 1218, 75, 75);
             ctx.restore();
 
+            // Author
             scaled.setFont("600 30.25px gg-sans");
             ctx.fillStyle = message.colorString || authorColor;
             scaled.fillText(message.author.name, 120, 1249);
             let textw = scaled.measureText(message.author.name).width;
+            add({ color: "INTERACTIVE_ACTIVE", region: { x: 120, y: 1249 + heightTransform() - 24, width: textw * factor, height: 24 } });
+            // Timestamp
             scaled.setFont("500 22px gg-sans");
             ctx.fillStyle = timestampColor;
             scaled.fillText(message.timestamp, textw + 120 + 16, 1249);
+            let twidth = ctx.measureText(message.timestamp).width;
+            add({ color: "TEXT_MUTED", region: { x: textw + 120 + 16, y: 1249 + heightTransform() - 24, width: twidth, height: 24 } });
         }
 
         height += 48;
@@ -159,6 +168,7 @@ export default function renderChat({ ctx, w, h }, { getSColor, getBackground, me
             // Reply arrow thing
             ctx.fillStyle = replyLineColor;
             ctx.strokeStyle = replyLineColor;
+            add({ color: "BACKGROUND_ACCENT", region: { x: 58, y: 1185 + heightTransform(), width: 54, height: 21 } });
             scaled.fillRect(58, 1193, 4, 17);
             scaled.fillRect(66, 1185, 46, 4);
             ctx.beginPath();
@@ -179,12 +189,15 @@ export default function renderChat({ ctx, w, h }, { getSColor, getBackground, me
             ctx.fillStyle = message.colorString || authorColor;
             scaled.fillText(message.referencedMessage.author.name, 158, 1195);
             let twidth = scaled.measureText(message.referencedMessage.author.name).width;
+            add({ color: "INTERACTIVE_ACTIVE", region: { x: 158, y: 1195 + heightTransform() - 24, width: twidth * factor, height: 24 } });
             let textx = twidth;
 
             ctx.fillStyle = replyContentColor;
             scaled.setFont("500 22px gg-sans");
             for (const node of message.referencedMessage.content) {
                 scaled.fillText(node.content, textx + 167, 1195);
+                let twidth = ctx.measureText(node.content).width; // using ctx because this is only used for the hit region
+                add({ color: "ICON_SECONDARY", region: { x: textx + 167, y: 1195 + heightTransform() - 24, width: twidth, height: 24 } });
             }
         }
 
@@ -288,12 +301,14 @@ export default function renderChat({ ctx, w, h }, { getSColor, getBackground, me
                 texty += 24;
                 ctx.beginPath();
                 scaled.roundRect(120, texty, 577, calculateEmbedHeight(embed), 30);
+                add({ color: "BACKGROUND_SECONDARY", region: { x: 120, y: texty + heightTransform(), width: 577, height: calculateEmbedHeight(embed) } });
                 ctx.fillStyle = embed.backgroundColor ?? getSColor("BACKGROUND_SECONDARY");
                 ctx.fill();
                 ctx.save();
                 ctx.clip();
                 ctx.fillStyle = androidColorToHex(embed.borderLeftColor) ?? getSColor("BACKGROUND_TERTIARY");
                 scaled.fillRect(120, texty, 8, calculateEmbedHeight(embed));
+                add({ color: "BACKGROUND_TERTIARY", region: { x: 120, y: texty + heightTransform(), width: 8, height: calculateEmbedHeight(embed) } });
                 ctx.restore();
                 textx = 150;
                 texty += 46;
@@ -328,7 +343,6 @@ export default function renderChat({ ctx, w, h }, { getSColor, getBackground, me
                     ctx.restore();
                 }
             }
-
         scaled.translate(0, -height);
     });
 

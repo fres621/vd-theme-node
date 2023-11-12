@@ -3,6 +3,7 @@ import scale from "./var";
 import renderChatHeader from "./chatHeader";
 import renderChatInputBar from "./chatInputBar";
 import renderChat from "./chat";
+import { clear, getHitsFromInterval } from "../hitregions";
 import { rawColors, semanticColors } from "../defaultColors";
 
 // Returns hex string for color
@@ -42,6 +43,7 @@ document.body.appendChild(canvas);
 window.setmessages = async () => {};
 
 function renderCanvas(options) {
+    clear();
     // Get the canvas element
     const [w, h] = [canvas.width, canvas.height];
     const ctx = canvas.getContext("2d");
@@ -108,6 +110,8 @@ async function loadImage(uri) {
         document.fonts.add(font);
         await font.load();
     }
+
+    window.getHitsFromInterval = (...a) => getHitsFromInterval(...a);
 
     window.targetFunction = async (o) => {
         let bg = o.getBackground();
