@@ -8,4 +8,6 @@ export function add(data) {
     hitRegions.push(data);
 }
 
-export function clear() { hitRegions = [] };
+export function clear() {
+    hitRegions = [];
+}

@@ -42,8 +42,6 @@ document.body.appendChild(canvas);
 window.setmessages = async () => {};
 
 function renderCanvas(options) {
-    console.log("options", options);
-
     // Get the canvas element
     const [w, h] = [canvas.width, canvas.height];
     const ctx = canvas.getContext("2d");

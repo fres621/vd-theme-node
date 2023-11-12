@@ -18,6 +18,7 @@ export function scaledCtx(ctx) {
         drawImage: (image, ...a) => ctx.drawImage(image, ...scale(...a)),
         translate: (...a) => ctx.translate(...scale(...a)),
         setLineWidth: (v) => (ctx.lineWidth = v * factor),
+        scale: (...a) => ctx.scale(...scale(...a)),
     };
 }
 

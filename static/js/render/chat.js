@@ -17,15 +17,20 @@ let samplemessages = [{
 }]
 */
 
-function calculateEmbedHeight(embed) {
-    let height = 257;
-    if (embed.image?.image) {
-        var ratio = Math.min(517 / embed.image.image.width, 400 / embed.image.image.height);
-        height += embed.image.image.height * ratio;
-        height += -110;
-    }
-    return height;
-}
+// TODO fix calculating embed height
+
+// The X at which a text line starts in a message content
+const messageContentStartX = 120;
+
+const messageContentWidth = 575;
+
+// The X at which a text line starts in an embed
+const embedContentStartX = 150;
+
+// The width of the area in an embed where text can be
+const embedContentWidth = 519;
+
+const emptyNode = { type: "text", content: "" };
 
 function trimTextToWidth(ctx, text, addEllipsis, maxWidth) {
     const measure = ctx.measureText;
@@ -38,6 +43,12 @@ function trimTextToWidth(ctx, text, addEllipsis, maxWidth) {
         if (measure(trimmed).width <= maxWidth) return trimmed;
     }
     return "";
+}
+
+// chatgpt
+function androidColorToHex(androidColor) {
+    if (!androidColor) return null;
+    return "#" + (androidColor + 0x1000000).toString(16);
 }
 
 export default function renderChat({ ctx, w, h }, { getSColor, getBackground, messages }) {
@@ -72,16 +83,17 @@ export default function renderChat({ ctx, w, h }, { getSColor, getBackground, me
     [...messages].reverse().map((message) => {
         let [textx, texty] = [120, 1289];
 
+        let textFont = "500 30px gg-sans";
         let visitors = {
             text: {
                 measure: (node) => {
-                    scaled.setFont("500 30px gg-sans");
+                    scaled.setFont(textFont);
                     return scaled.measureText(node.content).width;
                 },
                 render: (node) => {
-                    scaled.setFont("500 30px gg-sans");
+                    scaled.setFont(textFont);
                     ctx.fillStyle = textColor;
-                    ctx.fillText(node.content, textx, texty);
+                    scaled.fillText(node.content, textx, texty);
                     textx += scaled.measureText(node.content).width;
                 },
             },
@@ -113,12 +125,11 @@ export default function renderChat({ ctx, w, h }, { getSColor, getBackground, me
             },
         };
 
-        let lines = Math.floor(message.content.map((node) => visitors[node.type].measure(node)).reduce((p, a) => p + a, 0) / 690);
+        let lines = Math.floor(message.content.map((node) => visitors[node.type].measure(node)).reduce((p, a) => p + a, 0) / messageContentWidth);
 
-        scaled.translate(0, -lines * 43);
+        scaled.translate(0, -lines * 42);
 
-        if (message.embeds?.length) console.log(message.embeds.map((embed) => calculateEmbedHeight(embed)));
-        if (message.embeds?.length) scaled.translate(0, -message.embeds.map((embed) => calculateEmbedHeight(embed)).reduce((p, a) => p + a, 0));
+        if (message.embeds?.length) scaled.translate(0, -message.embeds.map((embed) => calculateEmbedHeight(embed) + 16).reduce((p, a) => p + a, 0));
 
         let height = 0;
         if (message.author?.avatarUrl) {
@@ -135,7 +146,7 @@ export default function renderChat({ ctx, w, h }, { getSColor, getBackground, me
             scaled.setFont("600 30.25px gg-sans");
             ctx.fillStyle = message.colorString || authorColor;
             scaled.fillText(message.author.name, 120, 1249);
-            let textw = ctx.measureText(message.author.name).width;
+            let textw = scaled.measureText(message.author.name).width;
             scaled.setFont("500 22px gg-sans");
             ctx.fillStyle = timestampColor;
             scaled.fillText(message.timestamp, textw + 120 + 16, 1249);
@@ -177,71 +188,148 @@ export default function renderChat({ ctx, w, h }, { getSColor, getBackground, me
             }
         }
 
-        function split(node, x = 120, y = 577) {
-            let f = (node) => (textx - x + visitors[node.type].measure(node)) / y;
-            if (f(node) <= 1) return [node];
-            if (typeof node.content === "string") {
-                if (f({ ...node, content: node.content[0] }) > 1) return [{ ...node, content: " " }, node];
-                let firstnode = { ...node };
-                let i = 0;
-                while (f(firstnode) > 1) {
-                    i++;
-                    firstnode.content = firstnode.content.slice(0, -1);
+        function splitAST(node, maxX) {
+            // Returns the node width / maxX, if it's above 1 it should be split
+            let getOverflow = (node) => (textx + visitors[node.type].measure(node)) / maxX;
+            if (getOverflow(node) <= 1) return [node];
+
+            function splitAt(node, n) {
+                let content = node.content;
+                switch (node.type) {
+                    case "text":
+                    case "inlineCode":
+                        return (() => {
+                            if (!n)
+                                return {
+                                    sub: node,
+                                    rest: emptyNode,
+                                };
+                            let splitIndex = content.lastIndexOf(" ", content.length - n);
+                            return {
+                                sub: { ...node, content: content.slice(0, splitIndex === -1 ? -n : splitIndex) },
+                                rest: { ...node, content: content.slice(splitIndex === -1 ? -n : splitIndex + 1) },
+                            };
+                        })();
+                    case "link":
+                        return (() => {
+                            function whereToSplitLinkContent(link) {
+                                for (let i = 0; i < link.content.length; i++) {
+                                    let length = getOverflow({ ...link, content: link.content.slice(0, i + 1) });
+                                    if (length > 1) return i;
+                                }
+                                return -1;
+                            }
+
+                            // the whole link fits in 1 line.
+                            if (whereToSplitLinkContent(node) === -1)
+                                return {
+                                    sub: node,
+                                    rest: emptyNode,
+                                };
+                            let index = whereToSplitLinkContent(node);
+                            let partToSub = node.content.slice(0, index + 1);
+                            let nodeToSub = partToSub[partToSub.length - 1];
+                            partToSub[partToSub.length - 1] = splitAt(nodeToSub, n).sub;
+                            let rest = [splitAt(nodeToSub, n).rest, ...node.content.slice(index + 1)];
+                            return {
+                                sub: { ...node, content: partToSub },
+                                rest: { ...node, content: rest },
+                            };
+                        })();
                 }
-                let secondnode = { ...node, content: node.content.slice(-i) };
-                return [firstnode, ...split(secondnode)];
+            }
+
+            let i = 0;
+            while (getOverflow(splitAt(node, i).sub) > 1) {
+                i++;
+            }
+
+            const { sub, rest } = splitAt(node, i);
+            return [sub, rest];
+        }
+
+        function renderLine(node, startX, maxX, leading = 46) {
+            let [sub, rest] = splitAST(node, maxX);
+            visitors[sub.type].render(sub);
+            if (rest) {
+                textx = startX;
+                texty += leading;
+                renderLine(rest, startX, maxX, leading);
             }
         }
 
         for (const node of message.content) {
-            split(node).forEach((node) => {
-                if (textx >= 690) {
-                    textx = 120;
-                    texty += 42;
-                }
-                visitors[node.type].render(node);
-            });
-            /*
-            console.log({ textx, texty });
-            console.log(node, visitors[node.type].measure(node));
-            console.log((textx - 120 + visitors[node.type].measure(node)) / 577);
-            split(node);
-            if (visitors[node.type]) visitors[node.type].render(node);
-            */
+            renderLine(node, messageContentStartX, messageContentStartX + messageContentWidth, 42);
+        }
+
+        function calculateEmbedHeight(embed) {
+            let height = 64;
+            let stextfont = textFont;
+            if (embed.title?.length) {
+                textFont = "600 30px gg-sans";
+                let lines = Math.ceil(embed.title.map((node) => visitors[node.type].measure(node)).reduce((p, a) => p + a, 0) / embedContentWidth);
+                height += lines * 42;
+            }
+            if (embed.description?.length) {
+                textFont = "500 25.7px gg-sans";
+                let lines = Math.ceil(embed.description.map((node) => visitors[node.type].measure(node)).reduce((p, a) => p + a, 0) / embedContentWidth);
+                height += lines * 44;
+            }
+            if (embed.image?.image) {
+                var ratio = Math.min(517 / embed.image.image.width, 400 / embed.image.image.height);
+                height += embed.image.image.height * ratio + 2;
+            }
+            textFont = stextfont;
+            return height;
         }
 
         if (message.embeds?.length)
             for (const embed of message.embeds) {
                 texty += 24;
                 ctx.beginPath();
-                scaled.roundRect(120, texty, 577, 340, 30);
+                scaled.roundRect(120, texty, 577, calculateEmbedHeight(embed), 30);
                 ctx.fillStyle = embed.backgroundColor ?? getSColor("BACKGROUND_SECONDARY");
                 ctx.fill();
                 ctx.save();
                 ctx.clip();
-                ctx.fillStyle = embed.borderLeftColor ?? getSColor("BACKGROUND_TERTIARY");
-                scaled.fillRect(120, texty, 8, 340);
+                ctx.fillStyle = androidColorToHex(embed.borderLeftColor) ?? getSColor("BACKGROUND_TERTIARY");
+                scaled.fillRect(120, texty, 8, calculateEmbedHeight(embed));
                 ctx.restore();
                 textx = 150;
                 texty += 46;
-                let xlimit = embed.thumbnail?.image ? 400 : 690;
+
+                // temporary
+                texty += 24 + 16;
+
+                let stextfont = textFont;
+                textFont = "600 30px gg-sans";
+                //let xlimit = embed.thumbnail?.image ? 400 : 690;
                 for (const node of embed.title) {
-                    split(node, 120, xlimit).forEach((node) => {
-                        if (textx >= xlimit) {
-                            textx = 120;
-                            texty += 42;
-                        }
-                        visitors[node.type].render(node);
-                    });
+                    renderLine(node, embedContentStartX, embedContentStartX + embedContentWidth, 40);
                 }
+                textFont = stextfont;
+
+                textx = 150;
+                texty += 48;
+
+                textFont = "500 25.7px gg-sans";
+                for (const node of embed.description) {
+                    renderLine(node, embedContentStartX, embedContentStartX + embedContentWidth, 35);
+                }
+                textFont = stextfont;
 
                 if (embed.image?.image) {
                     var ratio = Math.min(517 / embed.image.image.width, 400 / embed.image.image.height);
-                    scaled.drawImage(embed.image.image, 150, texty + 74, embed.image.image.width * ratio, embed.image.image.height * ratio);
+                    ctx.beginPath();
+                    scaled.roundRect(150, texty + 23, embed.image.image.width * ratio, embed.image.image.height * ratio, 30);
+                    ctx.save();
+                    ctx.clip();
+                    scaled.drawImage(embed.image.image, 150, texty + 23, embed.image.image.width * ratio, embed.image.image.height * ratio);
+                    ctx.restore();
                 }
             }
 
-        ctx.translate(0, -height);
+        scaled.translate(0, -height);
     });
 
     ctx.restore();

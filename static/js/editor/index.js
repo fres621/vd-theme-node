@@ -31,39 +31,32 @@ const options = {
         {
             author: fres,
             timestamp: "Today at 02:15",
-            content: [{ content: "in this app you can preview Discord RN", type: "text" }],
+            content: [{ content: "in this app you can preview Discord RN themes", type: "text" }],
             referencedMessage: {
                 author: fres,
                 content: [{ content: "Welcome to vd-theme-node :3", type: "text" }],
             },
         },
         {
-            content: [{ content: "themes", type: "text" }],
+            content: [{ content: "Soon you'll be able to edit them as well", type: "text" }],
         },
         {
             content: [
                 { content: "you can ", type: "text" },
                 { content: "load a theme", type: "inlineCode" },
-                { content: " from an URL to", type: "text" },
+                { content: " from an URL to preview it", type: "text" },
             ],
-        },
-        {
-            content: [{ content: "preview it", type: "text" }],
         },
         {
             content: [{ content: "Star it on Github if it's helpful!", type: "text" }],
         },
         {
-            content: [{ content: [{ content: "https://github.com/fres621/vd-theme-node", type: "text" }], type: "link" }],
-        },
-        {
-            content: [{ content: [{ content: "/tree/main", type: "text" }], type: "link" }],
-            /* not (fully) implemented yet
+            content: [{ content: [{ content: "https://github.com/fres621/vd-theme-node/tree/main", type: "text" }], type: "link" }],
             embeds: [
                 {
                     url: "https://github.com/fres621/vd-theme-node/tree/main",
                     type: "article",
-                    title: [{ content: [{ content: "Veterans Day 2023", type: "text" }], type: "link" }],
+                    title: [{ content: [{ content: "GitHub - fres621/vd-theme-node: Vendetta theme preview", type: "text" }], type: "link" }], // [{ content: [{ content: "GitHub - fres621/vd-theme-node: Vendetta theme preview", type: "text" }], type: "link" }]
                     description: [
                         { content: "Vendetta theme preview. Contribute to fres621/vd-theme-node development by creating an account on GitHub.", type: "text" },
                     ],
@@ -72,13 +65,13 @@ const options = {
                         width: 1200,
                         height: 600,
                     },
+                    //borderLeftColor: -14802137, rather let the user preview the default border left color
                     fields: [],
                 },
             ],
-            */
         },
     ],
-    channel: { type: "GC", name: "hehe" },
+    channel: { type: "GC", name: "introduction" },
     pings: 2,
 };
 
