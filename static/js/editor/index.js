@@ -14,7 +14,7 @@ const { getSemanticColor, getRawColor } = makeFunctions(selectedTheme);
 
 const fres = {
     name: "fres",
-    avatarUrl: "https://cdn.discordapp.com/avatars/843448897737064448/520512b700da5b93f1ea5bac0d5849e7.png?size=1024",
+    avatarUrl: "https://i.imgur.com/ziKeQw8.png",
 };
 
 const options = {
